@@ -1,6 +1,7 @@
 import 'package:ehr_management/pages/home.dart';
 import 'package:ehr_management/pages/login.dart';
 import 'package:ehr_management/pages/profile.dart';
+import 'package:ehr_management/pages/profile_details_update.dart';
 import 'package:ehr_management/pages/signup.dart';
 import 'package:ehr_management/utils/constant.dart';
 import 'package:flutter/material.dart';
@@ -24,12 +25,13 @@ class MainApp extends StatelessWidget {
           ),
           primarySwatch: Colors.deepPurple,
           brightness: Brightness.light),
-      home: const ProfilePage(),
+      home: const UpdateDetailsPage(),
       routes: {
         '/login': (context) => const LoginPage(),
         '/signup': (context) => const SignUpPage(),
         '/home': (context) => const HomePage(),
-        '/profile': (context) => const ProfilePage()
+        '/profile': (context) => const ProfilePage(),
+        '/profileUpdate': (context) => const UpdateDetailsPage()
       },
     );
   }
