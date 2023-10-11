@@ -22,7 +22,7 @@ class _ProfilePageState extends State<ProfilePage> {
           IconButton(
             icon: const Icon(Icons.edit),
             onPressed: () {
-              // add a logic to update current profile pic !!!!
+              Navigator.pushNamed(context, '/profileUpdate');
             },
           ),
         ],
@@ -35,7 +35,9 @@ class _ProfilePageState extends State<ProfilePage> {
             Row(
               children: [
                 InkWell(
-                  onTap: () {},
+                  onTap: () {
+                    // add a logic to update current profile pic !!!!
+                  },
                   child: const CircleAvatar(
                     backgroundImage: AssetImage('assets/profile.jpg'),
                     radius: 70,
