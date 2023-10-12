@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
 
-const Color backgroundColor = Colors.deepPurple;
+const Color appBarColor = Colors.deepPurple;
 const Color black = Colors.black;
+const Color backgroundColor = Color.fromARGB(255, 230, 227, 227);

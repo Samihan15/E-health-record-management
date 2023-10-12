@@ -1,7 +1,7 @@
-import 'package:ehr_management/pages/home.dart';
+import 'package:ehr_management/pages/patient/home.dart';
 import 'package:ehr_management/pages/login.dart';
-import 'package:ehr_management/pages/profile.dart';
-import 'package:ehr_management/pages/profile_details_update.dart';
+import 'package:ehr_management/pages/patient/profile.dart';
+import 'package:ehr_management/pages/patient/profile_details_update.dart';
 import 'package:ehr_management/pages/signup.dart';
 import 'package:ehr_management/utils/constant.dart';
 import 'package:flutter/material.dart';
@@ -20,12 +20,12 @@ class MainApp extends StatelessWidget {
       theme: ThemeData(
           appBarTheme: const AppBarTheme(
             centerTitle: true,
-            backgroundColor: backgroundColor,
+            backgroundColor: appBarColor,
             elevation: 1,
           ),
           primarySwatch: Colors.deepPurple,
           brightness: Brightness.light),
-      home: const UpdateDetailsPage(),
+      home: const HomePage(),
       routes: {
         '/login': (context) => const LoginPage(),
         '/signup': (context) => const SignUpPage(),
