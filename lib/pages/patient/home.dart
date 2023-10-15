@@ -61,6 +61,15 @@ class _HomePageState extends State<HomePage> {
           );
         },
       ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: FloatingActionButton(
+          onPressed: () {
+            Navigator.pushNamed(context, '/add_prescription');
+          },
+          child: const Icon(Icons.add),
+        ),
+      ),
     );
   }
 }
