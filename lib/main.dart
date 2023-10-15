@@ -1,3 +1,4 @@
+import 'package:ehr_management/pages/doctor/prescription_page.dart';
 import 'package:ehr_management/pages/patient/home.dart';
 import 'package:ehr_management/pages/login.dart';
 import 'package:ehr_management/pages/patient/profile.dart';
@@ -5,8 +6,14 @@ import 'package:ehr_management/pages/patient/profile_details_update.dart';
 import 'package:ehr_management/pages/signup.dart';
 import 'package:ehr_management/utils/constant.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(const MainApp());
 }
 
@@ -25,13 +32,14 @@ class MainApp extends StatelessWidget {
           ),
           primarySwatch: Colors.deepPurple,
           brightness: Brightness.light),
-      home: const HomePage(),
+      home: const LoginPage(),
       routes: {
         '/login': (context) => const LoginPage(),
         '/signup': (context) => const SignUpPage(),
         '/home': (context) => const HomePage(),
         '/profile': (context) => const ProfilePage(),
-        '/profileUpdate': (context) => const UpdateDetailsPage()
+        '/profileUpdate': (context) => const UpdateDetailsPage(),
+        '/add_prescription': (context) => const AddPrescription()
       },
     );
   }
