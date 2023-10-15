@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "343116099696",
+    "project_id": "ehr-management-52c95",
+    "storage_bucket": "ehr-management-52c95.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343116099696:android:e1c587b0608ca80ff184b5",
+        "android_client_info": {
+          "package_name": "com.example.ehr_management"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCefZHPfLQpMv8aT8az0p_BQdEc7hzDXAM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
