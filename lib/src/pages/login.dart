@@ -1,5 +1,3 @@
-import 'package:ehr_management/src/pages/doctor/barcode.dart';
-import 'package:ehr_management/src/pages/home.dart';
 import 'package:ehr_management/src/services/firebase_services.dart';
 import 'package:ehr_management/src/utils/widgets/snakbar.dart';
 import 'package:flutter/material.dart';
