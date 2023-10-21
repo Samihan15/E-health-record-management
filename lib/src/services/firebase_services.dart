@@ -38,9 +38,29 @@ Future<String> signInUser(email, password) async {
 }
 
 Future<void> logout() async {
+  final auth = FirebaseAuth.instance;
+  await auth.signOut();
+}
+
+Future<String> getRole() async {
   try {
-    await _auth.signOut();
+    final result = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(user?.uid)
+        .get();
+
+    if (result.exists) {
+      final data = result.data() as Map<String, dynamic>;
+      if (data.containsKey("role")) {
+        final role = data["role"];
+        return role.toString();
+      } else {
+        return 'patient'; // Role field not found, set a default value.
+      }
+    } else {
+      return 'patient'; // Document does not exist, set a default value.
+    }
   } catch (err) {
-    print('Error while loging out: $err');
+    return 'patient'; // Handle any other errors by setting a default value.
   }
 }

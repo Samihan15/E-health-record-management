@@ -189,11 +189,8 @@ class _SignUpPageState extends State<SignUpPage> {
                           _nameController.text.trim(),
                           _publicAddress.text.trim(),
                           _ageController.text.trim());
-                      if (result == 'success') {
-                        Navigator.pushNamed(context, '/home');
-                      } else {
-                        showSnackBar(context, result);
-                      }
+
+                      showSnackBar(context, result);
                     },
                     style: ButtonStyle(elevation: MaterialStateProperty.all(2)),
                     child: const Padding(

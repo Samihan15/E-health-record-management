@@ -13,6 +13,7 @@ dependencies:
   firebase_core:
   firebase_auth:
   cloud_firestore: 
+  simple_barcode_scanner: ^0.0.8
 
 dev_dependencies:
   flutter_test:

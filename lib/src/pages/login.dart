@@ -1,3 +1,5 @@
+import 'package:ehr_management/src/pages/doctor/barcode.dart';
+import 'package:ehr_management/src/pages/home.dart';
 import 'package:ehr_management/src/services/firebase_services.dart';
 import 'package:ehr_management/src/utils/widgets/snakbar.dart';
 import 'package:flutter/material.dart';
@@ -112,12 +114,9 @@ class _LoginPageState extends State<LoginPage> {
                 child: ElevatedButton(
                   onPressed: () async {
                     final result = await signInUser(
-                        _emailController.text, _passwordController.text);
-                    if (result == 'success') {
-                      Navigator.pushNamed(context, '/home');
-                    } else {
-                      showSnackBar(context, result);
-                    }
+                        _emailController.text.trim(),
+                        _passwordController.text.trim());
+                    showSnackBar(context, result);
                   },
                   style: ButtonStyle(elevation: MaterialStateProperty.all(2)),
                   child: const Text(
