@@ -10,13 +10,13 @@ class BarCode extends StatefulWidget {
 }
 
 class _BarCodeState extends State<BarCode> {
-  String result = '';
+  String result = 'unknown';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "S C A N   Q R   C O D E   P A G E",
+          "Scan Qr Page",
           style: TextStyle(color: Colors.white, fontSize: 20),
         ),
       ),
@@ -61,7 +61,8 @@ class _BarCodeState extends State<BarCode> {
                   style: TextStyle(fontSize: 18),
                 ),
               ),
-            )
+            ),
+            Text('$result')
           ],
         ),
       ),

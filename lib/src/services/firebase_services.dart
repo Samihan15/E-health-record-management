@@ -1,25 +1,49 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
 final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 User? user = _auth.currentUser;
 
-Future<String> registerUser(email, password, name, publicAddress, age) async {
+Future<String?> signUpFunction(String email, String password) async {
   try {
-    await _auth.createUserWithEmailAndPassword(
-        email: email, password: password);
-    await _firestore.collection('users').doc(user!.uid).set({
+    final credential = await FirebaseAuth.instance
+        .createUserWithEmailAndPassword(email: email, password: password);
+    return credential.user?.uid;
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'weak-password') {
+      return 'The password provided is too weak.';
+    } else if (e.code == 'email-already-in-use') {
+      return 'The account already exists for that email.';
+    } else {
+      return e.toString();
+    }
+  } catch (e) {
+    return e.toString();
+  }
+}
+
+Future<String?> storeUserData(
+    String name, String age, String publicAddress, String role) async {
+  try {
+    final userId = await FirebaseAuth.instance.currentUser!.uid;
+    await FirebaseFirestore.instance.collection('users').doc(userId).set({
       'name': name,
       'age': age,
       'publicAddress': publicAddress,
-      'role': 'patient'
+      'role': role,
+      'imgUrl': ''
     });
 
     return 'success';
-  } catch (err) {
-    print('Error occur while registering user : $err');
-    return err.toString();
+  } on FirebaseException catch (e) {
+    // Handle Firestore errors if needed
+    print("Error storing user data: $e");
+    return e.toString();
   }
 }
 
@@ -28,11 +52,11 @@ Future<String> signInUser(email, password) async {
     await _auth.signInWithEmailAndPassword(email: email, password: password);
     return 'success';
   } catch (err) {
-    print('Error occur while logingIn');
+    print('Error occur while logging in');
     if (err is FirebaseAuthException) {
       return err.message.toString();
     } else {
-      return 'Login error';
+      return err.toString();
     }
   }
 }
@@ -44,23 +68,40 @@ Future<void> logout() async {
 
 Future<String> getRole() async {
   try {
-    final result = await FirebaseFirestore.instance
-        .collection('users')
-        .doc(user?.uid)
-        .get();
+    final userId = FirebaseAuth.instance.currentUser!.uid;
+    final result =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
 
-    if (result.exists) {
-      final data = result.data() as Map<String, dynamic>;
-      if (data.containsKey("role")) {
-        final role = data["role"];
-        return role.toString();
-      } else {
-        return 'patient'; // Role field not found, set a default value.
-      }
-    } else {
-      return 'patient'; // Document does not exist, set a default value.
-    }
+    final role = result['role'];
+    return role;
   } catch (err) {
-    return 'patient'; // Handle any other errors by setting a default value.
+    return 'patient';
+  }
+}
+
+Future<String> uploadProfileImage(File imageFile) async {
+  try {
+    final user = FirebaseAuth.instance.currentUser;
+    final storageRef =
+        FirebaseStorage.instance.ref().child('profile_images/${user!.uid}');
+
+    // Delete the previous photo
+    try {
+      await storageRef.delete();
+      print('Previous photo deleted');
+    } catch (deleteError) {
+      // Ignore errors if the previous photo doesn't exist
+      print('No previous photo found');
+    }
+
+    // Upload the new photo
+    final TaskSnapshot uploadTask = await storageRef.putFile(imageFile);
+    final imageUrl = await uploadTask.ref.getDownloadURL();
+
+    print('Upload successful');
+    return imageUrl.toString();
+  } catch (error) {
+    print('Error uploading image: $error');
+    throw error; // Rethrow the error to handle it at the caller level
   }
 }

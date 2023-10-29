@@ -70,6 +70,8 @@ class _MyDrawerState extends State<MyDrawer> {
             title: const Text('Logout'),
             onTap: () async {
               await logout();
+              Navigator.pushNamedAndRemoveUntil(
+                  context, '/login', (route) => false);
             },
           ),
         ],

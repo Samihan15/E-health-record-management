@@ -22,7 +22,7 @@ class _AddPrescriptionState extends State<AddPrescription> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'A D D   P R E S C R I P T I O N',
+          'Add Prescription',
           style: TextStyle(color: Colors.white, fontSize: 20),
         ),
       ),

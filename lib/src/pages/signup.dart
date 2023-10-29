@@ -17,6 +17,8 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _ageController = TextEditingController();
   bool toggle = true;
 
+  late String selectedUserType = 'patient';
+
   void Toggle() {
     setState(() {
       toggle = !toggle;
@@ -36,18 +38,9 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: const Text(
-        'S I G N U P   P A G E',
-        style: TextStyle(color: Colors.white, fontSize: 20),
-      )),
-      body: SingleChildScrollView(
-        child: Stack(children: [
-          const Image(
-            image: AssetImage('assets/signup.jpg'),
-            opacity: AlwaysStoppedAnimation(0.4),
-          ),
-          Padding(
+      body: Center(
+        child: SingleChildScrollView(
+          child: Padding(
             padding: const EdgeInsets.all(10.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -55,10 +48,8 @@ class _SignUpPageState extends State<SignUpPage> {
                 const Text(
                   'Hello user 👋',
                   style: TextStyle(
-                    fontSize: 40,
-                    color: Colors.deepPurple,
+                    fontSize: 30,
                     fontStyle: FontStyle.italic,
-                    fontWeight: FontWeight.bold,
                   ),
                 ),
                 const SizedBox(
@@ -179,18 +170,55 @@ class _SignUpPageState extends State<SignUpPage> {
                 const SizedBox(
                   height: 10,
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Select role '),
+                    Radio(
+                      value: 'patient',
+                      groupValue: selectedUserType,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedUserType = value!;
+                        });
+                      },
+                    ),
+                    const Text('Patient'),
+                    Radio(
+                      value: 'doctor',
+                      groupValue: selectedUserType,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedUserType = value!;
+                        });
+                      },
+                    ),
+                    const Text('Doctor'),
+                  ],
+                ),
                 Container(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
-                      final result = await registerUser(
+                      final result = await signUpFunction(
                           _emailController.text.trim(),
-                          _passwordController.text.trim(),
-                          _nameController.text.trim(),
-                          _publicAddress.text.trim(),
-                          _ageController.text.trim());
+                          _passwordController.text.trim());
 
-                      showSnackBar(context, result);
+                      final result1 = await storeUserData(
+                          _nameController.text.trim(),
+                          _ageController.text.trim(),
+                          _publicAddress.text.trim(),
+                          selectedUserType);
+
+                      if (result1 == 'success') {
+                        if (selectedUserType == 'doctor') {
+                          Navigator.pushNamed(context, '/barcode_page');
+                        } else if (selectedUserType == 'patient') {
+                          Navigator.pushNamed(context, '/home');
+                        }
+                      }
+
+                      showSnackBar(context, result1!);
                     },
                     style: ButtonStyle(elevation: MaterialStateProperty.all(2)),
                     child: const Padding(
@@ -227,7 +255,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ],
             ),
           ),
-        ]),
+        ),
       ),
     );
   }

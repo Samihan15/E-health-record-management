@@ -25,127 +25,120 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "L O G I N   P A G E",
-          style: TextStyle(color: Colors.white, fontSize: 20),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Column(
-            children: [
-              const Image(image: AssetImage('assets/login.jpg')),
-              const SizedBox(
-                height: 10,
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Text(
+              'Welcome again !',
+              style: TextStyle(
+                fontSize: 30,
+                fontStyle: FontStyle.italic,
               ),
-              const Text(
-                'Welcome again !',
-                style: TextStyle(
-                  fontSize: 40,
-                  color: Colors.deepPurple,
-                  fontStyle: FontStyle.italic,
-                  fontWeight: FontWeight.bold,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            TextFormField(
+              controller: _emailController,
+              validator: (value) {
+                if (!value!.contains('@gmail.com')) {
+                  return 'Please enter valid email !';
+                } else if (value.isEmpty) {
+                  return 'Please enter your email';
+                }
+                return null;
+              },
+              decoration: const InputDecoration(
+                labelText: 'Email',
+                hintText: 'Enter your email',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderSide: BorderSide(),
                 ),
               ),
-              const SizedBox(
-                height: 20,
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            TextFormField(
+              controller: _passwordController,
+              obscureText: toggle,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please enter your password';
+                } else if (value.length <= 7) {
+                  return 'Password length should be at least 7';
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                labelText: 'Password',
+                suffixIcon: InkWell(
+                    onTap: () {
+                      setState(() {
+                        toggle = !toggle;
+                      });
+                    },
+                    child: !toggle
+                        ? const Icon(Icons.visibility)
+                        : const Icon(Icons.visibility_off)),
+                hintText: 'Enter your password',
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderSide: BorderSide(),
+                ),
               ),
-              TextFormField(
-                controller: _emailController,
-                validator: (value) {
-                  if (!value!.contains('@gmail.com')) {
-                    return 'Please enter valid email !';
-                  } else if (value.isEmpty) {
-                    return 'Please enter your email';
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Container(
+              height: 60,
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () async {
+                  final result = await signInUser(_emailController.text.trim(),
+                      _passwordController.text.trim());
+
+                  final role = await getRole();
+                  if (role == 'patient') {
+                    Navigator.pushNamed(context, '/home');
+                  } else if (role == 'doctor') {
+                    Navigator.pushNamed(context, '/barcode_page');
                   }
-                  return null;
+                  showSnackBar(context, result);
                 },
-                decoration: const InputDecoration(
-                  labelText: 'Email',
-                  hintText: 'Enter your email',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(),
-                  ),
+                style: ButtonStyle(elevation: MaterialStateProperty.all(2)),
+                child: const Text(
+                  'Login',
+                  style: TextStyle(fontSize: 18),
                 ),
               ),
-              const SizedBox(
-                height: 15,
-              ),
-              TextFormField(
-                controller: _passwordController,
-                obscureText: toggle,
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter your password';
-                  } else if (value.length <= 7) {
-                    return 'Password length should be at least 7';
-                  }
-                  return null;
-                },
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  suffixIcon: InkWell(
-                      onTap: () {
-                        setState(() {
-                          toggle = !toggle;
-                        });
-                      },
-                      child: !toggle
-                          ? const Icon(Icons.visibility)
-                          : const Icon(Icons.visibility_off)),
-                  hintText: 'Enter your password',
-                  border: const OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10)),
-                    borderSide: BorderSide(),
-                  ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  'Don\'t have account ? ',
+                  style: TextStyle(fontSize: 20),
                 ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Container(
-                height: 60,
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    final result = await signInUser(
-                        _emailController.text.trim(),
-                        _passwordController.text.trim());
-                    showSnackBar(context, result);
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/signup');
                   },
-                  style: ButtonStyle(elevation: MaterialStateProperty.all(2)),
                   child: const Text(
-                    'Login',
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 15,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Text(
-                    'Don\'t have account ? ',
+                    'SignUp here !',
                     style: TextStyle(fontSize: 20),
                   ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, '/signup');
-                    },
-                    child: const Text(
-                      'SignUp here !',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
+                ),
+              ],
+            )
+          ],
         ),
       ),
     );

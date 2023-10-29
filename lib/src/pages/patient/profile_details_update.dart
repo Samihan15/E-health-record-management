@@ -31,7 +31,7 @@ class _UpdateDetailsPageState extends State<UpdateDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'U P D A T E   I N F O R M A T I O N',
+          'Update Information',
           style: TextStyle(color: Colors.white, fontSize: 20),
         ),
       ),

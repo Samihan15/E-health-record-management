@@ -1,7 +1,6 @@
 import 'package:ehr_management/src/services/firebase_services.dart';
 import 'package:ehr_management/src/utils/widgets/drawer.dart';
 import 'package:flutter/material.dart';
-import 'package:ehr_management/src/utils/constant.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -13,23 +12,23 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String result = "patient";
 
-  getResult() async {
-    result = await getRole();
-  }
-
   @override
   void initState() {
     super.initState();
     getResult();
   }
 
+  getResult() async {
+    result = await getRole();
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: backgroundColor,
       appBar: AppBar(
         title: const Text(
-          'P A T I E N T\'s   H I S T O R Y',
+          'Patient\'s History',
           style: TextStyle(color: Colors.white, fontSize: 20),
         ),
       ),
@@ -50,7 +49,7 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Doctor\'s Name: Samihan Nandedkar',
+                        'Doctor\'s Name: Divesh',
                         style: TextStyle(
                           fontSize: 18,
                         ),
