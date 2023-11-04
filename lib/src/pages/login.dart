@@ -1,4 +1,6 @@
 import 'package:ehr_management/src/services/firebase_services.dart';
+import 'package:ehr_management/src/services/shared_pref.dart';
+import 'package:ehr_management/src/utils/constant.dart';
 import 'package:ehr_management/src/utils/widgets/snakbar.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +14,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _privateKey = TextEditingController();
 
   bool toggle = false;
 
@@ -20,6 +23,7 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+    _privateKey.dispose();
   }
 
   @override
@@ -94,6 +98,28 @@ class _LoginPageState extends State<LoginPage> {
             const SizedBox(
               height: 15,
             ),
+            TextFormField(
+              controller: _privateKey,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please enter your private key';
+                } else if (value.length != 64) {
+                  return 'Please enter valid private key';
+                }
+                return null;
+              },
+              decoration: const InputDecoration(
+                labelText: 'Private key',
+                hintText: 'Enter your private key',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  borderSide: BorderSide(),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
             Container(
               height: 60,
               width: double.infinity,
@@ -103,6 +129,12 @@ class _LoginPageState extends State<LoginPage> {
                       _passwordController.text.trim());
 
                   final role = await getRole();
+                  if (result == 'success') {
+                    await SharedPref().savePrivateKey(_privateKey.text.trim());
+                    setState(() {
+                      privateKey = _privateKey.text.trim();
+                    });
+                  }
                   if (role == 'patient') {
                     Navigator.pushNamed(context, '/home');
                   } else if (role == 'doctor') {

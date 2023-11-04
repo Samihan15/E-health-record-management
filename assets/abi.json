@@ -1,0 +1,280 @@
+[
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "age",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "publicAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "email",
+				"type": "string"
+			}
+		],
+		"name": "addDoctor",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "age",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "publicAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "email",
+				"type": "string"
+			}
+		],
+		"name": "addPatient",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "patientAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "date",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "prescription",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "doctorName",
+				"type": "string"
+			}
+		],
+		"name": "addPrescription",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "patientAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "newName",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "newAge",
+				"type": "uint256"
+			},
+			{
+				"internalType": "string",
+				"name": "newEmail",
+				"type": "string"
+			}
+		],
+		"name": "updatePatientInfo",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "doctors",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "age",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "publicAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "emailAddress",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "patientPrescriptions",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "date",
+				"type": "string"
+			},
+			{
+				"internalType": "string",
+				"name": "prescriptionDetails",
+				"type": "string"
+			},
+			{
+				"internalType": "address",
+				"name": "doctorPublicAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "doctorName",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"name": "patients",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "name",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "age",
+				"type": "uint256"
+			},
+			{
+				"internalType": "address",
+				"name": "publicAddress",
+				"type": "address"
+			},
+			{
+				"internalType": "string",
+				"name": "emailAddress",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "patientAddress",
+				"type": "address"
+			}
+		],
+		"name": "viewMedicalHistory",
+		"outputs": [
+			{
+				"components": [
+					{
+						"internalType": "string",
+						"name": "date",
+						"type": "string"
+					},
+					{
+						"internalType": "string",
+						"name": "prescriptionDetails",
+						"type": "string"
+					},
+					{
+						"internalType": "address",
+						"name": "doctorPublicAddress",
+						"type": "address"
+					},
+					{
+						"internalType": "string",
+						"name": "doctorName",
+						"type": "string"
+					}
+				],
+				"internalType": "struct EHealthManagementSystem.Prescription[]",
+				"name": "",
+				"type": "tuple[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	}
+]

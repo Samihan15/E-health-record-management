@@ -1,5 +1,7 @@
+import 'package:ehr_management/src/services/functions.dart';
 import 'package:ehr_management/src/utils/constant.dart';
 import 'package:flutter/material.dart';
+import 'package:web3dart/web3dart.dart';
 
 class UpdateDetailsPage extends StatefulWidget {
   const UpdateDetailsPage({super.key});
@@ -111,8 +113,8 @@ class _UpdateDetailsPageState extends State<UpdateDetailsPage> {
               height: 10,
             ),
             ElevatedButton(
-              onPressed: () {
-                // update information logic
+              onPressed: () async {
+                // await updatePatientInfoFunction(EthereumAddress.fromHex('patients address'), _nameController.text, int.parse(_ageController.text), _)
                 Navigator.of(context).pop();
               },
               style: ButtonStyle(elevation: MaterialStateProperty.all(2)),

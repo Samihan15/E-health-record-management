@@ -1,6 +1,10 @@
 import 'package:ehr_management/src/services/firebase_services.dart';
+import 'package:ehr_management/src/services/functions.dart';
+import 'package:ehr_management/src/services/shared_pref.dart';
+import 'package:ehr_management/src/utils/constant.dart';
 import 'package:ehr_management/src/utils/widgets/snakbar.dart';
 import 'package:flutter/material.dart';
+import 'package:web3dart/credentials.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -15,6 +19,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _publicAddress = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
+  final TextEditingController _privateKey = TextEditingController();
   bool toggle = true;
 
   late String selectedUserType = 'patient';
@@ -33,6 +38,7 @@ class _SignUpPageState extends State<SignUpPage> {
     _publicAddress.dispose();
     _nameController.dispose();
     _ageController.dispose();
+    _privateKey.dispose();
   }
 
   @override
@@ -167,6 +173,28 @@ class _SignUpPageState extends State<SignUpPage> {
                 const SizedBox(
                   height: 10,
                 ),
+                TextFormField(
+                  controller: _privateKey,
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter your private key';
+                    } else if (value.length != 64) {
+                      return 'Please enter valid private key';
+                    }
+                    return null;
+                  },
+                  decoration: const InputDecoration(
+                    labelText: 'Private key',
+                    hintText: 'Enter your private key',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      borderSide: BorderSide(),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
                 const SizedBox(
                   height: 10,
                 ),
@@ -200,25 +228,49 @@ class _SignUpPageState extends State<SignUpPage> {
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () async {
-                      final result = await signUpFunction(
-                          _emailController.text.trim(),
-                          _passwordController.text.trim());
-
-                      final result1 = await storeUserData(
+                      if (_nameController.text.trim().isNotEmpty &&
+                          _ageController.text.trim().isNotEmpty &&
+                          _publicAddress.text.trim().isNotEmpty) {
+                        await signUpFunction(_emailController.text.trim(),
+                            _passwordController.text.trim());
+                        final result1 = await storeUserData(
                           _nameController.text.trim(),
                           _ageController.text.trim(),
                           _publicAddress.text.trim(),
-                          selectedUserType);
+                          selectedUserType,
+                        );
 
-                      if (result1 == 'success') {
-                        if (selectedUserType == 'doctor') {
-                          Navigator.pushNamed(context, '/barcode_page');
-                        } else if (selectedUserType == 'patient') {
-                          Navigator.pushNamed(context, '/home');
+                        if (result1 != null && result1 == 'success') {
+                          setState(() {
+                            privateKey = _privateKey.text.trim();
+                          });
+                          if (selectedUserType == 'doctor') {
+                            await SharedPref()
+                                .savePrivateKey(_privateKey.text.trim());
+                            await addDoctorFunction(
+                                _nameController.text,
+                                int.parse(_ageController.text),
+                                EthereumAddress.fromHex(
+                                    _publicAddress.text.trim()),
+                                _emailController.text.trim());
+                            Navigator.pushNamed(context, '/barcode_page');
+                          } else if (selectedUserType == 'patient') {
+                            await SharedPref()
+                                .savePrivateKey(_privateKey.text.trim());
+                            await addPatientFunction(
+                                _nameController.text,
+                                int.parse(_ageController.text),
+                                EthereumAddress.fromHex(
+                                    _publicAddress.text.trim()),
+                                _emailController.text.trim());
+                            Navigator.pushNamed(context, '/home');
+                          }
+                        } else {
+                          showSnackBar(context, 'Error: $result1');
                         }
+                      } else {
+                        showSnackBar(context, 'Please fill in all fields.');
                       }
-
-                      showSnackBar(context, result1!);
                     },
                     style: ButtonStyle(elevation: MaterialStateProperty.all(2)),
                     child: const Padding(

@@ -1,4 +1,5 @@
 import 'package:ehr_management/src/services/firebase_services.dart';
+import 'package:ehr_management/src/services/shared_pref.dart';
 import 'package:flutter/material.dart';
 
 class MyDrawer extends StatefulWidget {
@@ -70,6 +71,7 @@ class _MyDrawerState extends State<MyDrawer> {
             title: const Text('Logout'),
             onTap: () async {
               await logout();
+              await SharedPref().removeData();
               Navigator.pushNamedAndRemoveUntil(
                   context, '/login', (route) => false);
             },

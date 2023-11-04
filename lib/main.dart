@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ehr_management/src/pages/doctor/barcode.dart';
 import 'package:ehr_management/src/pages/doctor/prescription_page.dart';
 import 'package:ehr_management/src/pages/home.dart';
@@ -11,12 +10,14 @@ import 'package:ehr_management/src/utils/constant.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'src/services/shared_pref.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await SharedPref().init();
   runApp(const MainApp());
 }
 

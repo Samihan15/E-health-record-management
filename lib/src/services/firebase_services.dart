@@ -2,12 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-
-final FirebaseAuth _auth = FirebaseAuth.instance;
-final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-User? user = _auth.currentUser;
 
 Future<String?> signUpFunction(String email, String password) async {
   try {
@@ -30,26 +25,32 @@ Future<String?> signUpFunction(String email, String password) async {
 Future<String?> storeUserData(
     String name, String age, String publicAddress, String role) async {
   try {
-    final userId = await FirebaseAuth.instance.currentUser!.uid;
-    await FirebaseFirestore.instance.collection('users').doc(userId).set({
-      'name': name,
-      'age': age,
-      'publicAddress': publicAddress,
-      'role': role,
-      'imgUrl': ''
-    });
-
-    return 'success';
-  } on FirebaseException catch (e) {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userId = user.uid;
+      await FirebaseFirestore.instance.collection('users').doc(userId).set({
+        'name': name,
+        'age': age,
+        'publicAddress': publicAddress,
+        'role': role,
+        'imgUrl': '',
+      });
+      return 'success';
+    } else {
+      // Handle the case where the user is not authenticated
+      return 'User not authenticated.';
+    }
+  } catch (e) {
     // Handle Firestore errors if needed
     print("Error storing user data: $e");
-    return e.toString();
+    return 'Error storing user data: $e';
   }
 }
 
 Future<String> signInUser(email, password) async {
   try {
-    await _auth.signInWithEmailAndPassword(email: email, password: password);
+    final auth = FirebaseAuth.instance;
+    await auth.signInWithEmailAndPassword(email: email, password: password);
     return 'success';
   } catch (err) {
     print('Error occur while logging in');
