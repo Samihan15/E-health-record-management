@@ -34,6 +34,7 @@ Future<String?> storeUserData(
         'publicAddress': publicAddress,
         'role': role,
         'imgUrl': '',
+        'bloodGroup': ''
       });
       return 'success';
     } else {
@@ -104,5 +105,26 @@ Future<String> uploadProfileImage(File imageFile) async {
   } catch (error) {
     print('Error uploading image: $error');
     throw error; // Rethrow the error to handle it at the caller level
+  }
+}
+
+Future<DocumentSnapshot<Map<String, dynamic>>> getUsers() async {
+  var userId = FirebaseAuth.instance.currentUser?.uid;
+  return await FirebaseFirestore.instance.collection('users').doc(userId).get();
+}
+
+Future<void> updateInfo(
+    String newName, String newAge, String bloodGroup) async {
+  try {
+    var userId = FirebaseAuth.instance.currentUser?.uid;
+    var userRef = FirebaseFirestore.instance.collection('users').doc(userId);
+
+    await userRef
+        .update({'name': newName, 'age': newAge, 'bloodGroup': bloodGroup});
+
+    print('User info updated successfully');
+  } catch (error) {
+    print('Error updating user info: $error');
+    // Handle errors or show a message to the user
   }
 }

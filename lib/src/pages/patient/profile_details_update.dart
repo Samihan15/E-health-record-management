@@ -1,31 +1,38 @@
-import 'package:ehr_management/src/services/functions.dart';
-import 'package:ehr_management/src/utils/constant.dart';
+import 'package:ehr_management/src/services/firebase_services.dart';
 import 'package:flutter/material.dart';
-import 'package:web3dart/web3dart.dart';
 
 class UpdateDetailsPage extends StatefulWidget {
-  const UpdateDetailsPage({super.key});
+  const UpdateDetailsPage({Key? key}) : super(key: key);
 
   @override
   State<UpdateDetailsPage> createState() => _UpdateDetailsPageState();
 }
 
 class _UpdateDetailsPageState extends State<UpdateDetailsPage> {
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _ageController = TextEditingController();
-  TextEditingController _bloodController = TextEditingController();
-  TextEditingController _addressController = TextEditingController();
-  TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _ageController = TextEditingController();
+  final TextEditingController _bloodController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    loadUserData();
+  }
+
+  void loadUserData() async {
+    var users = await getUsers();
+    // Load existing user data to update
+    _nameController.text = users['name'];
+    _ageController.text = users['age'];
+    _bloodController.text = users['bloodGroup'];
+  }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _nameController.dispose();
     _ageController.dispose();
     _bloodController.dispose();
-    _addressController.dispose();
-    _phoneController.dispose();
   }
 
   @override
@@ -43,87 +50,49 @@ class _UpdateDetailsPageState extends State<UpdateDetailsPage> {
           children: [
             TextField(
               controller: _nameController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Name',
-                hintText: 'update your name',
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: black, width: 2),
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                hintText: 'Update your name',
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
             TextField(
               controller: _ageController,
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Age',
-                hintText: 'update your Age',
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: black, width: 2),
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                hintText: 'Update your age',
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
             TextField(
               controller: _bloodController,
-              decoration: InputDecoration(
+              decoration: const InputDecoration(
                 labelText: 'Blood Group',
-                hintText: 'update your blood group',
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: black, width: 2),
-                  borderRadius: BorderRadius.circular(10),
-                ),
+                hintText: 'Update your blood group',
               ),
             ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextField(
-              controller: _addressController,
-              decoration: InputDecoration(
-                labelText: 'Address',
-                hintText: 'update your address',
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: black, width: 2),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            TextField(
-              controller: _phoneController,
-              decoration: InputDecoration(
-                labelText: 'Phone Number',
-                hintText: 'update your phone number',
-                enabledBorder: OutlineInputBorder(
-                  borderSide: const BorderSide(color: black, width: 2),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
+            const SizedBox(height: 10),
             ElevatedButton(
               onPressed: () async {
-                // await updatePatientInfoFunction(EthereumAddress.fromHex('patients address'), _nameController.text, int.parse(_ageController.text), _)
-                Navigator.of(context).pop();
+                await updateInfo(
+                  _nameController.text,
+                  _ageController.text,
+                  _bloodController.text,
+                );
+                Navigator.pop(context);
               },
-              style: ButtonStyle(elevation: MaterialStateProperty.all(2)),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 60.0, vertical: 15),
-                child: Text(
-                  'Update',
-                  style: TextStyle(fontSize: 18),
+              style: ElevatedButton.styleFrom(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0),
                 ),
+                elevation: 3.0,
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 20.0, vertical: 12.0),
+              ),
+              child: const Text(
+                'Update',
+                style: TextStyle(fontSize: 18),
               ),
             ),
           ],
