@@ -38,11 +38,9 @@ Future<String?> storeUserData(
       });
       return 'success';
     } else {
-      // Handle the case where the user is not authenticated
       return 'User not authenticated.';
     }
   } catch (e) {
-    // Handle Firestore errors if needed
     print("Error storing user data: $e");
     return 'Error storing user data: $e';
   }
@@ -86,13 +84,10 @@ Future<String> uploadProfileImage(File imageFile) async {
     final user = FirebaseAuth.instance.currentUser;
     final storageRef =
         FirebaseStorage.instance.ref().child('profile_images/${user!.uid}');
-
-    // Delete the previous photo
     try {
       await storageRef.delete();
       print('Previous photo deleted');
     } catch (deleteError) {
-      // Ignore errors if the previous photo doesn't exist
       print('No previous photo found');
     }
 
@@ -104,7 +99,7 @@ Future<String> uploadProfileImage(File imageFile) async {
     return imageUrl.toString();
   } catch (error) {
     print('Error uploading image: $error');
-    throw error; // Rethrow the error to handle it at the caller level
+    throw error;
   }
 }
 
@@ -125,6 +120,5 @@ Future<void> updateInfo(
     print('User info updated successfully');
   } catch (error) {
     print('Error updating user info: $error');
-    // Handle errors or show a message to the user
   }
 }

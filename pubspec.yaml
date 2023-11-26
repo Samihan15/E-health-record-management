@@ -13,7 +13,7 @@ dependencies:
   firebase_core:
   firebase_auth:
   cloud_firestore: 
-  simple_barcode_scanner: ^0.0.8
+  simple_barcode_scanner: 
   firebase_storage:
   image_picker:
   web3dart: ^2.7.1

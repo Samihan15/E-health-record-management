@@ -1,3 +1,4 @@
+import 'package:ehr_management/src/pages/home.dart';
 import 'package:ehr_management/src/utils/widgets/drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
@@ -54,6 +55,11 @@ class _BarCodeState extends State<BarCode> {
                       result = res;
                     }
                   });
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              HomePage(scannedResult: result)));
                 },
                 style: ButtonStyle(elevation: MaterialStateProperty.all(2)),
                 child: const Text(
@@ -62,7 +68,6 @@ class _BarCodeState extends State<BarCode> {
                 ),
               ),
             ),
-            Text('$result')
           ],
         ),
       ),

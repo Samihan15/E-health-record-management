@@ -43,7 +43,6 @@ class MainApp extends StatelessWidget {
         '/home': (context) => const HomePage(),
         '/profile': (context) => const ProfilePage(),
         '/profileUpdate': (context) => const UpdateDetailsPage(),
-        '/add_prescription': (context) => const AddPrescription(),
         '/barcode_page': (context) => const BarCode(),
       },
     );

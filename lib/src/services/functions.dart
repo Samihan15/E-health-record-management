@@ -1,14 +1,14 @@
 import 'package:flutter/services.dart';
 import 'package:web3dart/web3dart.dart';
-
 import '../utils/constant.dart';
 
 Future<DeployedContract> loadContract() async {
   String abi = await rootBundle.loadString('assets/abi.json');
   String contractAddress = contractAddress1;
   final contract = DeployedContract(
-      ContractAbi.fromJson(abi, 'EHealthManagementSystem'),
-      EthereumAddress.fromHex(contractAddress));
+    ContractAbi.fromJson(abi, 'EHealthManagementSystem'),
+    EthereumAddress.fromHex(contractAddress),
+  );
   return contract;
 }
 
@@ -27,8 +27,6 @@ Future<String?> callFunction(Web3Client ethClient, String privateKey,
         function: ethFunction,
         parameters: args,
       ),
-      chainId: null,
-      fetchChainIdFromNetworkId: true,
     );
 
     return result;
@@ -38,14 +36,25 @@ Future<String?> callFunction(Web3Client ethClient, String privateKey,
   }
 }
 
-// Define a function to call the addPatient function
+Future<void> addPrescriptionFunction(EthereumAddress patientAddress,
+    String date, String prescription, String doctorName) async {
+  final args = [patientAddress, date, prescription, doctorName];
+  String? result =
+      await callFunction(ethClient, privateKey!, 'addPrescription', args);
+
+  if (result != null) {
+    print('Prescription added successfully: $result');
+  } else {
+    print('Failed to add prescription.');
+  }
+}
+
 Future<void> addPatientFunction(
     String name, int age, EthereumAddress publicAddress, String email) async {
   final args = [name, BigInt.from(age), publicAddress, email];
   await callFunction(ethClient, privateKey!, 'addPatient', args);
 }
 
-// Define a function to call the addDoctor function
 Future<void> addDoctorFunction(
     String name, int age, EthereumAddress publicAddress, String email) async {
   final args = [name, BigInt.from(age), publicAddress, email];
@@ -53,11 +62,11 @@ Future<void> addDoctorFunction(
 }
 
 // Define a function to call the addPrescription function
-Future<void> addPrescriptionFunction(EthereumAddress patientAddress,
-    String date, String prescription, String doctorName) async {
-  final args = [patientAddress, date, prescription, doctorName];
-  await callFunction(ethClient, privateKey!, 'addPrescription', args);
-}
+// Future<void> addPrescriptionFunction(EthereumAddress patientAddress,
+//     String date, String prescription, String doctorName) async {
+//   final args = [patientAddress, date, prescription, doctorName];
+//   await callFunction(ethClient, privateKey!, 'addPrescription', args);
+// }
 
 Future<List<dynamic>> viewMedicalHistoryFunction(
     EthereumAddress patientAddress) async {

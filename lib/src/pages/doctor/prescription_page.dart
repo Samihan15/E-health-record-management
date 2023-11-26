@@ -1,7 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:web3dart/web3dart.dart';
+
+import '../../services/functions.dart'; // Make sure to import the web3dart library
 
 class AddPrescription extends StatefulWidget {
-  const AddPrescription({super.key});
+  final EthereumAddress patientAddress;
+
+  const AddPrescription({Key? key, required this.patientAddress})
+      : super(key: key);
 
   @override
   State<AddPrescription> createState() => _AddPrescriptionState();
@@ -12,9 +21,52 @@ class _AddPrescriptionState extends State<AddPrescription> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _prescriptionController.dispose();
+  }
+
+  Future<String> getDoctor() async {
+    try {
+      var user = FirebaseAuth.instance.currentUser!.uid;
+      var doctor =
+          await FirebaseFirestore.instance.collection('users').doc(user).get();
+      return doctor['name'];
+    } catch (err) {
+      print(err);
+    }
+    return 'no user found';
+  }
+
+  Future<void> submitPrescription() async {
+    try {
+      String prescriptionText = _prescriptionController.text;
+
+      if (prescriptionText.isNotEmpty) {
+        final doctorName = await getDoctor();
+        await addPrescriptionFunction(
+          widget.patientAddress,
+          DateTime.now().toString(),
+          prescriptionText,
+          doctorName,
+        );
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Prescription added successfully!'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please enter a prescription before submitting.'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (error) {
+      print('Error submitting prescription: $error');
+    }
   }
 
   @override
@@ -35,9 +87,9 @@ class _AddPrescriptionState extends State<AddPrescription> {
               keyboardType: TextInputType.multiline,
               controller: _prescriptionController,
               decoration: InputDecoration(
-                labelText: 'Prescition',
+                labelText: 'Prescription',
                 labelStyle: const TextStyle(fontSize: 18),
-                hintText: 'Add prescition here',
+                hintText: 'Add prescription here',
                 hintStyle: const TextStyle(fontSize: 18),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -48,7 +100,7 @@ class _AddPrescriptionState extends State<AddPrescription> {
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: submitPrescription,
               style: ButtonStyle(elevation: MaterialStateProperty.all(2)),
               child: const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 60.0, vertical: 15),

@@ -1,9 +1,14 @@
-import 'package:ehr_management/src/services/firebase_services.dart';
+import 'package:ehr_management/src/pages/doctor/prescription_page.dart';
 import 'package:ehr_management/src/utils/widgets/drawer.dart';
 import 'package:flutter/material.dart';
+import 'package:web3dart/web3dart.dart';
+
+import '../services/functions.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final String? scannedResult;
+
+  const HomePage({Key? key, this.scannedResult}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -11,16 +16,27 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String result = "patient";
+  List<Map<String, dynamic>> medicalHistory = [];
 
   @override
   void initState() {
     super.initState();
-    getResult();
+    loadMedicalHistory();
   }
 
-  getResult() async {
-    result = await getRole();
-    setState(() {});
+  Future<void> loadMedicalHistory() async {
+    if (result == 'patient' && widget.scannedResult != null) {
+      try {
+        var patientAddress = widget.scannedResult;
+        List<dynamic> history = await viewMedicalHistoryFunction(
+            EthereumAddress.fromHex(patientAddress!));
+        setState(() {
+          medicalHistory = history.cast<Map<String, dynamic>>();
+        });
+      } catch (error) {
+        print('Error loading medical history: $error');
+      }
+    }
   }
 
   @override
@@ -38,37 +54,37 @@ class _HomePageState extends State<HomePage> {
           setState(() {});
         },
         child: ListView.builder(
-          itemCount: 2,
+          itemCount: medicalHistory.length,
           itemBuilder: (BuildContext context, int index) {
-            return const Padding(
-              padding: EdgeInsets.all(8.0),
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
               child: Card(
                 child: Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Doctor\'s Name: Divesh',
-                        style: TextStyle(
+                        'Doctor\'s Name: ${medicalHistory[index]['doctorName']}',
+                        style: const TextStyle(
                           fontSize: 18,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       Text(
-                        'Doctor\'s Public Address: 0x52520984471d8D1b34B3c416e42A2ab22f56a363',
-                        style: TextStyle(
+                        'Doctor\'s Address: ${medicalHistory[index]['doctorAddress']}',
+                        style: const TextStyle(
                           fontSize: 18,
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       Text(
-                        'Prescription: Crosin',
-                        style: TextStyle(
+                        'Prescription: ${medicalHistory[index]['prescriptionDetails']}',
+                        style: const TextStyle(
                           fontSize: 18,
                         ),
                       ),
@@ -84,7 +100,12 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: result == 'doctor'
           ? FloatingActionButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/add_prescription');
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => AddPrescription(
+                            patientAddress: EthereumAddress.fromHex(
+                                widget.scannedResult!))));
               },
               child: const Icon(Icons.add),
             )

@@ -10,7 +10,7 @@ const String ethUrl =
     'https://sepolia.infura.io/v3/7cd0595828554464ae5d1fb2ef83ffde';
 
 String? voterPrivateKey;
-const contractAddress1 = '0x5C74711b064D639c96ac707F2264C2f05Da80Fc0';
+const contractAddress1 = '0xEAcC03881B6E42C3F4399e76A667F282209182E6';
 final Web3Client ethClient = Web3Client(ethUrl, Client());
 
 String? privateKey;
