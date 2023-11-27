@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:web3dart/web3dart.dart';
 
-import '../services/shared_pref.dart';
 
 const Color appBarColor = Colors.deepPurple;
 const Color black = Colors.black;
