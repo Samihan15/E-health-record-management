@@ -1,5 +1,4 @@
 import 'package:ehr_management/src/pages/doctor/barcode.dart';
-import 'package:ehr_management/src/pages/doctor/prescription_page.dart';
 import 'package:ehr_management/src/pages/home.dart';
 import 'package:ehr_management/src/pages/login.dart';
 import 'package:ehr_management/src/pages/patient/profile.dart';
@@ -17,7 +16,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await SharedPref().init();
+  var sharedPref = SharedPref();
+  await sharedPref.init();
   runApp(const MainApp());
 }
 

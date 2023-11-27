@@ -1,10 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:web3dart/web3dart.dart';
 
-import '../../services/functions.dart'; // Make sure to import the web3dart library
+import '../../services/functions.dart';
 
 class AddPrescription extends StatefulWidget {
   final EthereumAddress patientAddress;
@@ -43,19 +42,31 @@ class _AddPrescriptionState extends State<AddPrescription> {
 
       if (prescriptionText.isNotEmpty) {
         final doctorName = await getDoctor();
-        await addPrescriptionFunction(
-          widget.patientAddress,
-          DateTime.now().toString(),
-          prescriptionText,
-          doctorName,
-        );
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Prescription added successfully!'),
-            duration: Duration(seconds: 2),
-          ),
-        );
+        if (widget.patientAddress != null) {
+          await addPrescriptionFunction(
+            widget.patientAddress,
+            DateTime.now().toString(),
+            prescriptionText,
+            doctorName,
+          );
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Prescription added successfully!'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+          Navigator.pop(context);
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                  'Patient address is null. Unable to submit prescription.'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -71,6 +82,7 @@ class _AddPrescriptionState extends State<AddPrescription> {
 
   @override
   Widget build(BuildContext context) {
+    print(widget.patientAddress);
     return Scaffold(
       appBar: AppBar(
         title: const Text(
