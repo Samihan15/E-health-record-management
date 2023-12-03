@@ -9,4 +9,13 @@ The system is designed to improve the quality of healthcare by providing a decen
 to patients.
 
 ## Workflow
-![Patient workflow]()
+Patient side app workflow
+![Patient workflow](https://github.com/Samihan15/E-health-record-management/blob/main/assets/Patient%20flow.png)
+
+Doctor side app workflow
+![Doctor workflow](https://github.com/Samihan15/E-health-record-management/blob/main/assets/Admin%20flow.png)
+
+## Technologies used
+* Firebase
+* Flutter
+* Solidity
