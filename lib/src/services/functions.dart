@@ -66,27 +66,23 @@ Future<void> addPrescriptionFunction(EthereumAddress patientAddress,
 
 Future<void> addPatientFunction(
     String name, int age, EthereumAddress publicAddress, String email) async {
-  final args = [name, BigInt.from(age), publicAddress, email];
-  String? result =
-      await callFunction(ethClient, privateKey!, 'addPatient', args);
-
-  if (result != null && result.startsWith('0x')) {
-    print('Patient added successfully: $result');
-  } else {
-    handleTransactionFailure('addPatientFunction', result);
+  try {
+    final args = [name, BigInt.from(age), publicAddress, email];
+    String? result =
+        await callFunction(ethClient, privateKey!, 'addPatient', args);
+  } catch (err) {
+    print('error in addPatientFunction : ${err}');
   }
 }
 
 Future<void> addDoctorFunction(
     String name, int age, EthereumAddress publicAddress, String email) async {
-  final args = [name, BigInt.from(age), publicAddress, email];
-  String? result =
-      await callFunction(ethClient, privateKey!, 'addDoctor', args);
-
-  if (result != null && result.startsWith('0x')) {
-    print('Doctor added successfully: $result');
-  } else {
-    handleTransactionFailure('addDoctorFunction', result);
+  try {
+    final args = [name, BigInt.from(age), publicAddress, email];
+    String? result =
+        await callFunction(ethClient, privateKey!, 'addDoctor', args);
+  } catch (err) {
+    print('error in addPatientFunction : ${err}');
   }
 }
 
